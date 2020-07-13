@@ -6,4 +6,5 @@
     <color name = "DangerZone">#fa4b4b</color>
     <color name ="Background">#c2bbf0</color>
     <color name="safeZone">#4bfa88</color>
+    <color name="Black">#FF000000</color>
 </resources>

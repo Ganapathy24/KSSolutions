@@ -18,14 +18,16 @@ import java.util.List;
 
 public class WorksDetail extends RecyclerView.Adapter<WorksDetail.ViewHolder>{
     private List<Works> mDate;
-    private String empID;
+    private String empID,pass;
     private JSONObject mResult;
 
-    public WorksDetail(List<Works> DateList, JSONObject result,String eid)
+    public WorksDetail(List<Works> DateList, JSONObject result,String eid,String p1)
     {
         empID = eid;
         mDate = DateList;
         mResult = result;
+        pass = p1;
+
     }
 
     @Override
@@ -70,6 +72,7 @@ public class WorksDetail extends RecyclerView.Adapter<WorksDetail.ViewHolder>{
                 Toast.makeText(context, (mDate.get(position).getDate()),Toast.LENGTH_SHORT).show();
                 Intent in = new Intent(context, DayWiseActivity.class);
                 in.putExtra("ID",empID);
+                in.putExtra("pass",pass);
                 in.putExtra("date", mDate.get(position).getDate());
                 context.startActivity(in);
 

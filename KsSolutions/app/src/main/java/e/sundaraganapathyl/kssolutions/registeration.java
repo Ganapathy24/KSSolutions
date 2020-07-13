@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +37,11 @@ import org.w3c.dom.Text;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class registeration extends AppCompatActivity {
+public class registeration extends AppCompatActivity  {
     String empid;
     String DOJ;
+    private AwesomeValidation awesomeValidation;
+    String BASE_URL = "http://kaththi.herokuapp.com/kathi/mobile/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +50,7 @@ public class registeration extends AppCompatActivity {
         final EditText fName,lName,phone,email,address,district,state,education,experience;
         final Button submit;
         final ImageButton doj;
+        awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
         fName = findViewById(R.id.fname);
         lName = findViewById(R.id.lname);
         phone = findViewById(R.id.phone);
@@ -58,6 +64,7 @@ public class registeration extends AppCompatActivity {
         experience = findViewById(R.id.exp);
         submit = findViewById(R.id.register);
         empid = getIntent().getStringExtra("ID");
+
 
         doj.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,15 +88,17 @@ public class registeration extends AppCompatActivity {
                 alertDialog.show();
             }
         });
-
+        awesomeValidation.addValidation(this, R.id.email, Patterns.EMAIL_ADDRESS, R.string.emailerror);
+        awesomeValidation.addValidation(this, R.id.phone, "^[2-9]{2}[0-9]{8}$", R.string.mobileerror);
 
 
         submit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                onResume(fName.getText().toString(),lName.getText().toString(),phone.getText().toString(),email.getText().toString(),address.getText().toString(),district.getText().toString(),state.getText().toString(),education.getText().toString(),DOJ,experience.getText().toString());
-
+                if(awesomeValidation.validate()) {
+                    onResume(fName.getText().toString(), lName.getText().toString(), phone.getText().toString(), email.getText().toString(), address.getText().toString(), district.getText().toString(), state.getText().toString(), education.getText().toString(), DOJ, experience.getText().toString());
+                }
             }
         });
     }
@@ -116,7 +125,7 @@ public class registeration extends AppCompatActivity {
         }
     }
     void EmployeeDetails(String fName,String lName,String phone,String email,String address,String district,String state,String education,String doj,String experience,final VolleyCallback callback) throws JSONException {
-        String url = "http://192.168.43.174:8080/kathi/mobile/employeedetail";
+        String url = BASE_URL+"employeedetail";
         final HashMap<String, String> postParams = new HashMap<String, String>();
         Log.i("EMMM",empid);
         postParams.put("empid",empid);

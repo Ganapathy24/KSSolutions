@@ -39,7 +39,8 @@ import java.util.HashMap;
 
 public class DayWiseActivity extends AppCompatActivity {
 
-    String empid,cDate;
+    String empid,cDate,pass;
+    String BASE_URL = "http://kaththi.herokuapp.com/kathi/mobile/";
     Button submit;
     ArrayList<Activity> activity;
     RecyclerView rvWorks;
@@ -58,6 +59,7 @@ public class DayWiseActivity extends AppCompatActivity {
         submit = findViewById(R.id.submission);
         buttonL = findViewById(R.id.buttonLayout);
         empid = getIntent().getStringExtra("ID");
+        pass= getIntent().getStringExtra("pass");
         cDate = getIntent().getStringExtra("date");
         if (dtf.format(now).equals(cDate) == false) {
             buttonL.setVisibility(View.GONE);
@@ -97,61 +99,67 @@ public class DayWiseActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 String rating = Rating.getText().toString();
-                                Toast.makeText(DayWiseActivity.this, "HELLO", Toast.LENGTH_SHORT).show();
-                                int len = adapter.getList().size();
-                                int i = 0;
-                                String urrll = "http://192.168.43.174:8080/kathi/mobile/completework";
-                                HashMap<String, HashMap> twoD = new HashMap<String, HashMap>();
-                                for (StoreData ch : adapter.getList()) {
-                                    HashMap<String, String> Data = new HashMap<String, String>();
-                                    Data.put("empid", ch.getEmpID());
-                                    Data.put("WorkID",ch.getWorkID());
-                                    Data.put("time", ch.gettime());
-                                    Data.put("dependancy", ch.getDependancy());
-                                    Data.put("remark", ch.getWRemark());
-                                    Data.put("isComplete",ch.getIsComplete());
-                                    twoD.put(String.valueOf(i), Data);
-                                    Log.d("Data",twoD.toString());
-                                    i += 1;
+                                if (!(Integer.parseInt(rating) >= 0 && Integer.parseInt(rating) <= 100)) {
+                                    Rating.requestFocus();
+                                    Rating.setError("Rating should be in the range(0-100)");
                                 }
-                                HashMap<String, String> Data = new HashMap<String, String>();
-                                Data.put("Rating",rating);
-                                twoD.put("Rating",Data);
-
-
-                                RequestQueue queue = Volley.newRequestQueue(DayWiseActivity.this);
-                                JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, urrll, new JSONObject(twoD),
-                                        new Response.Listener<JSONObject>() {
-
-                                            @Override
-                                            public void onResponse(JSONObject response) {
-                                                try {
-                                                    new VolleyCallback() {
-                                                        @Override
-                                                        public void onSuccessResponse(JSONObject result) throws JSONException {
-                                                            Intent in = new Intent(DayWiseActivity.this,DateWise_Activity.class);
-                                                            in.putExtra("ID", empid);
-                                                            startActivity(in);
-                                                            Toast.makeText(DayWiseActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }.onSuccessResponse(response);
-                                                    Log.i("Response before", response.toString());
-
-                                                    Log.i("Response parse", "onResponse: " + response.getJSONObject("0").getJSONObject("fields").getString("planneddate"));
-                                                } catch (Throwable t) {
-                                                    Log.e("My App", "Could not parse malformed JSON: \"" + t + "\"");
-                                                }
-                                            }
-                                        }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Log.i("WORKING", error.toString());
+                                else {
+                                    int len = adapter.getList().size();
+                                    int i = 0;
+                                    String urrll = BASE_URL + "completework";
+                                    HashMap<String, HashMap> twoD = new HashMap<String, HashMap>();
+                                    for (StoreData ch : adapter.getList()) {
+                                        HashMap<String, String> Data = new HashMap<String, String>();
+                                        Data.put("empid", ch.getEmpID());
+                                        Data.put("WorkID", ch.getWorkID());
+                                        Data.put("time", ch.gettime());
+                                        Data.put("dependancy", ch.getDependancy());
+                                        Data.put("remark", ch.getWRemark());
+                                        Data.put("isComplete", ch.getIsComplete());
+                                        twoD.put(String.valueOf(i), Data);
+                                        Log.d("Data", twoD.toString());
+                                        i += 1;
                                     }
-                                });
-                                queue.add(stringRequest);
-                                Log.d("Hashmap ",twoD.toString());
-                                alertDialog.dismiss();
-                        }
+                                    HashMap<String, String> Data = new HashMap<String, String>();
+                                    Data.put("Rating", rating);
+                                    twoD.put("Rating", Data);
+
+
+                                    RequestQueue queue = Volley.newRequestQueue(DayWiseActivity.this);
+                                    JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, urrll, new JSONObject(twoD),
+                                            new Response.Listener<JSONObject>() {
+
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+                                                    try {
+                                                        new VolleyCallback() {
+                                                            @Override
+                                                            public void onSuccessResponse(JSONObject result) throws JSONException {
+                                                                Intent in = new Intent(DayWiseActivity.this, DateWise_Activity.class);
+                                                                in.putExtra("ID", empid);
+                                                                in.putExtra("pass", pass);
+                                                                startActivity(in);
+                                                                Toast.makeText(DayWiseActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }.onSuccessResponse(response);
+                                                        Log.i("Response before", response.toString());
+
+                                                        Log.i("Response parse", "onResponse: " + response.getJSONObject("0").getJSONObject("fields").getString("planneddate"));
+                                                    } catch (Throwable t) {
+                                                        Log.e("My App", "Could not parse malformed JSON: \"" + t + "\"");
+                                                    }
+                                                }
+                                            }, new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Log.i("WORKING", error.toString());
+                                        }
+                                    });
+                                    queue.add(stringRequest);
+                                    Log.d("Hashmap ", twoD.toString());
+                                    alertDialog.dismiss();
+                                }
+                            }
                         });
 
                         alertDialog.show();
@@ -162,7 +170,7 @@ public class DayWiseActivity extends AppCompatActivity {
         });
     }
     void Assignedwork(String id,String date,final DayWiseActivity.VolleyCallback callback) {
-        String url = "http://192.168.43.174:8080/kathi/mobile/dateActivity";
+        String url = BASE_URL+"dateActivity";
         final HashMap<String, String> postParams = new HashMap<String, String>();
         postParams.put("userid",id);
         postParams.put("Date",date);
@@ -201,13 +209,23 @@ public class DayWiseActivity extends AppCompatActivity {
             case R.id.addwork:
                 Intent myIntent = new Intent(DayWiseActivity.this,Assignment.class);
                 myIntent.putExtra("ID",empid);
+                myIntent.putExtra("pass",pass);
                 startActivity(myIntent);
                 break;
+
+            case R.id.changepass:
+                Intent intent = new Intent(DayWiseActivity.this,Authentication.class);
+                intent.putExtra("id",empid);
+                intent.putExtra("pass",pass);
+                startActivity(intent);
+                break;
+
 
             case R.id.refresh:
                 Intent in = new Intent(DayWiseActivity.this,DayWiseActivity.class);
                 in.putExtra("ID",empid);
                 in.putExtra("date",cDate);
+                in.putExtra("pass",pass);
                 startActivity(in);
                 break;
             // action with ID action_settings was selected

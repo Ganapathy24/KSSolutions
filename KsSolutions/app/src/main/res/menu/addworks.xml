@@ -7,6 +7,9 @@
         android:id="@+id/addwork"
         android:title="Add Works"></item>
     <item
+        android:id="@+id/changepass"
+        android:title="Change Password"/>
+    <item
         android:id="@+id/refresh"
         app:showAsAction="never"
         android:title="Refresh">

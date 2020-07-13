@@ -6,6 +6,13 @@
     android:background="@color/Background"
     android:orientation="vertical">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <TextView
         android:background="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
@@ -21,6 +28,7 @@
         android:textColor="#FFF"
         android:textSize="30sp"
         android:visibility="visible" />
+
     <LinearLayout
         android:padding="10dp"
         android:background="@drawable/text_border"
@@ -87,6 +95,8 @@
             android:layout_height="match_parent" />
         </LinearLayout>
     </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

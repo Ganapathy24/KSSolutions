@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
+    String BASE_URL = "http://kaththi.herokuapp.com/kathi/mobile/";
 
     public interface VolleyCallback{
         void onSuccessResponse(JSONObject result) throws JSONException;
@@ -61,16 +62,11 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putBoolean("Registered", true);
-                        editor.putString("Username", user_id);
-                        editor.putString("Password", pass);
-                        editor.apply();
                         Intent myIntent = new Intent(MainActivity.this,DateWise_Activity.class);
                         myIntent.putExtra("ID", user_id);
+                        myIntent.putExtra("pass",pass);
                         startActivity(myIntent);
-                        Toast.makeText(MainActivity.this, "Registerstion sucessful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginAPI(String user_id, String pass, final VolleyCallback callback) {
-        String url = "http://192.168.43.174:8080/kathi/mobile/loginapi";
+        String url = BASE_URL+"loginapi";
         final HashMap<String, String> postParams = new HashMap<String, String>();
         postParams.put("userid", user_id);
         postParams.put("password", pass);

@@ -28,8 +28,8 @@ import java.util.HashMap;
 
 public class Assignment extends AppCompatActivity {
 
-
-    String empid;
+    String BASE_URL = "http://kaththi.herokuapp.com/kathi/mobile/";
+    String empid,pass;
     String CDate;
 
     public interface VolleyCallback {
@@ -45,6 +45,7 @@ public class Assignment extends AppCompatActivity {
                     Toast.makeText(Assignment.this,"ADDED SUCCESSFULLY",Toast.LENGTH_LONG).show();
                     Intent myIntent  =new Intent(Assignment.this,DateWise_Activity.class);
                     myIntent.putExtra("ID", empid);
+                    myIntent.putExtra("pass",pass);
                     startActivity(myIntent);
                 }
             });
@@ -59,6 +60,7 @@ public class Assignment extends AppCompatActivity {
         setContentView(R.layout.activity_assignment);
         final EditText name,plannedTime,remarks,work_id;
         empid = getIntent().getStringExtra("ID");
+        pass= getIntent().getStringExtra("pass");
         Button submit;
         work_id = findViewById(R.id.workid);
         name = findViewById(R.id.newWork);
@@ -106,7 +108,7 @@ public class Assignment extends AppCompatActivity {
     }
 
     void Assignment(String workID,String name,String PlannedTime,String remarks,final VolleyCallback callback) throws JSONException {
-        String url = "http://192.168.43.174:8080/kathi/mobile/creatework";
+        String url = BASE_URL+"creatework";
         final HashMap<String, String> postParams = new HashMap<String, String>();
         postParams.put("empid",empid);
         postParams.put("workid", workID);

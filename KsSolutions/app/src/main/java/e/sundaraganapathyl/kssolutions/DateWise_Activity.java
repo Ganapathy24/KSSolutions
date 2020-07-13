@@ -29,7 +29,8 @@ import java.util.HashMap;
 public class DateWise_Activity extends AppCompatActivity {
 
     ArrayList<Works> works;
-    String empid;
+    String BASE_URL = "http://kaththi.herokuapp.com/kathi/mobile/";
+    String empid,pass;
     RecyclerView rvWorks;
     public interface VolleyCallback {
         void onSuccessResponse(JSONObject result) throws JSONException;
@@ -38,6 +39,7 @@ public class DateWise_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         empid = getIntent().getStringExtra("ID");
+        pass= getIntent().getStringExtra("pass");
         setContentView(R.layout.activity_date_wise_);
         onResume(empid);
     }
@@ -48,7 +50,7 @@ public class DateWise_Activity extends AppCompatActivity {
             public void onSuccessResponse(JSONObject result) throws JSONException {
                 rvWorks = findViewById(R.id.works);
                 works = Works.DatewiseWork(result);
-                WorksDetail adapter = new WorksDetail(works,result,empid);
+                WorksDetail adapter = new WorksDetail(works,result,empid,pass);
                 rvWorks.setAdapter(adapter);
                 rvWorks.setLayoutManager(new LinearLayoutManager(DateWise_Activity.this));
 
@@ -56,7 +58,7 @@ public class DateWise_Activity extends AppCompatActivity {
         });
     }
     void Assignedwork(String id,final DateWise_Activity.VolleyCallback callback) {
-        String url = "http://192.168.43.174:8080/kathi/mobile/activity";
+        String url = BASE_URL+"activity";
         final HashMap<String, String> postParams = new HashMap<String, String>();
         postParams.put("userid",id);
         JSONObject data= new JSONObject();
@@ -95,15 +97,24 @@ public class DateWise_Activity extends AppCompatActivity {
             case R.id.addwork:
                 Intent myIntent = new Intent(DateWise_Activity.this,Assignment.class);
                 myIntent.putExtra("ID",empid);
+                myIntent.putExtra("pass",pass);
                 startActivity(myIntent);
                 break;
 
             case R.id.refresh:
                 Intent in = new Intent(DateWise_Activity.this,DateWise_Activity.class);
                 in.putExtra("ID", empid);
+                in.putExtra("pass",pass);
                 startActivity(in);
                 Toast.makeText(this, "Refresh selected", Toast.LENGTH_SHORT)
                         .show();
+                break;
+
+            case R.id.changepass:
+                Intent intent = new Intent(DateWise_Activity.this,Authentication.class);
+                intent.putExtra("id",empid);
+                intent.putExtra("pass",pass);
+                startActivity(intent);
                 break;
             // action with ID action_settings was selected
             case R.id.logout:

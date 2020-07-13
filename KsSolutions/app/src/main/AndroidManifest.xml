@@ -4,17 +4,30 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/iconapp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Assignment"></activity>
-        <activity android:name=".DayWiseActivity" />
-        <activity android:name=".DateWise_Activity" />
-        <activity android:name=".registeration" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".Authentication"
+            android:label="Ks Solutions"></activity>
+        <activity
+            android:name=".Assignment"
+            android:label="Assignment" />
+        <activity
+            android:name=".DayWiseActivity"
+            android:label="Activity" />
+        <activity
+            android:name=".DateWise_Activity"
+            android:label="Logs" />
+        <activity
+            android:name=".registeration"
+            android:label="Registration" />
+        <activity
+            android:name=".MainActivity"
+            android:label="Ks Solutions">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,8 +39,9 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>
